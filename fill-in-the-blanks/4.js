@@ -6,10 +6,10 @@ try {
     state: {},
     log: [],
     set: function (key, value) {
-      _;
+      this.state[key] = value;
     },
     remove: function (key) {
-      _;
+      delete this.state[key];
     },
     renderState: function () {
       const liElements = Object.keys(this.state)
@@ -39,27 +39,27 @@ try {
     view: function (id) {
       // debugger;
       const displayEl = document.createElement('p');
-      displayEl.innerHTML = _._();
+      displayEl.innerHTML = this.renderState();
 
       const keyInputEl = document.createElement('input');
       keyInputEl.type = 'text';
-      keyInputEl.name = _;
+      keyInputEl.name = "key";
       keyInputEl.placeholder = 'key';
 
       const valueInputEl = document.createElement('input');
       valueInputEl.type = 'text';
-      valueInputEl.name = _;
+      valueInputEl.name = "value";
       valueInputEl.placeholder = 'value';
 
       const setButtonEl = document.createElement('input');
       setButtonEl.type = 'button';
-      setButtonEl.value = _;
-      setButtonEl.onclick = _._._(_, _);
+      setButtonEl.value = "set key";
+      setButtonEl.onclick = this.handler.bind(this, displayEl);
 
       const removeButtonEl = document.createElement('input');
       removeButtonEl.type = 'button';
-      removeButtonEl.value = _;
-      removeButtonEl.onclick = _._._(_, _);
+      removeButtonEl.value = "remove key";
+      removeButtonEl.onclick = this.handler.bind(this, displayEl);
 
       const formEl = document.createElement('form');
       formEl.appendChild(keyInputEl);
@@ -74,7 +74,7 @@ try {
       container.appendChild(formEl);
       container.appendChild(displayEl);
       container.onclick = (function (e) {
-        if (e.target === e.currentTarget) console.log(_, _);
+        if (e.target === e.currentTarget) console.log(title, this);
       }).bind(this);
 
       return container;
@@ -86,11 +86,11 @@ try {
     .appendChild(obj.view(title));
 
 
-  const assert = (_, _) => {
-    if (_) {
-      console.log('%cPASS: ' + _, 'color:green');
+  const assert = (test, text) => {
+    if (test) {
+      console.log('%cPASS: ' + text, 'color:green');
     } else {
-      console.log('%cFAIL: ' + _, 'color:red');
+      console.log('%cFAIL: ' + text, 'color:red');
     }
   };
 
