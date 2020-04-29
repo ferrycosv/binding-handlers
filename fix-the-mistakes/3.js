@@ -1,5 +1,5 @@
 try {
-  const title = 'mistakes-3';
+  const title = "mistakes-3";
   console.group(title);
   // there is a comment by each method saying how many mistakes are in it
   // write a little note about each after you fix it for later study
@@ -7,85 +7,90 @@ try {
   const obj = {
     state: {
       num: 0,
-      charCode: 0
+      charCode: 0,
     },
     log: [],
-    numToCharCode: function () { // 1 mistake
-      this.state.charCode = ((this.state.num % 256) + 256) % 256;
+    numToCharCode: function () {
+      // 1 mistake
+      //debugger;
+      //this.state.charCode = (((this.state.num % 255) - 255) % 255);
+      this.state.charCode =
+        this.state.num >= 0
+          ? ((this.state.num % 255) + 255) % 255
+          : 255 + (this.state.num + 1);
+      this.state.num = this.state.num < 0 ? -1 : this.state.num;
     },
-    renderCharCode: function () { // 1 mistake
-      return `<text>${String.fromCharCode(this.state.num)}</text>`;
+    renderCharCode: function () {
+      // 1 mistake
+      return `<text>${String.fromCharCode(this.state.charCode)}</text>`;
     },
-    handler: function (display, event) { // 2 mistakes
+    handler: function (display, event) {
+      // 2 mistakes
       // debugger;
       this.state.num = Number(event.target.value);
-      this.renderCharCode();
-      display.innerHTML = this.numToCharCode();
-      this.log.push(
-        JSON.parse(JSON.stringify(this.state))
-      );
+      this.numToCharCode();
+      display.innerHTML = this.renderCharCode();
+      this.log.push(JSON.parse(JSON.stringify(this.state)));
     },
-    view: function (id) { // 3 mistakes
+    view: function (id) {
+      // 3 mistakes
       // debugger;
-      const outputEl = document.createElement('code');
-      outputEl.style.marginLeft = '8%';
+      const outputEl = document.createElement("code");
+      outputEl.style.marginLeft = "8%";
 
-      const inputEl = document.createElement('input');
-      inputEl.type = 'number';
-      inputEl.value = '0';
-      inputEl.onchange = this.handler.call(this, outputEl);
+      const inputEl = document.createElement("input");
+      inputEl.type = "number";
+      inputEl.value = "0";
+      inputEl.onchange = this.handler.bind(this, outputEl);
 
-      const container = document.createElement('div');
+      const container = document.createElement("div");
       container.id = id;
       container.appendChild(inputEl);
       container.appendChild(outputEl);
-      container.className = 'exercise';
+      container.className = "exercise";
       container.onclick = function (e) {
         if (e.target === e.currentTarget) console.log.bind(title, this);
       };
 
       return container;
     },
-  }
+  };
 
-  document
-    .getElementById('root')
-    .appendChild(obj.view(title));
-
+  document.getElementById("root").appendChild(obj.view(title));
 
   // there are no mistakes in the tests
   const assert = (assertion, message) => {
     if (assertion) {
-      console.log('%cPASS: ' + message, 'color:green');
+      console.log("%cPASS: " + message, "color:green");
     } else {
-      console.log('%cFAIL: ' + message, 'color:red');
+      console.log("%cFAIL: " + message, "color:red");
     }
   };
 
-  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', 'Test 0');
+  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', "Test 0");
 
   obj.numToCharCode();
-  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', 'Test 1');
+  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', "Test 1");
 
   obj.state.num = 1;
   obj.numToCharCode();
-  assert(JSON.stringify(obj.state) === '{"num":1,"charCode":1}', 'Test 2');
+  assert(JSON.stringify(obj.state) === '{"num":1,"charCode":1}', "Test 2");
 
   obj.state.num = -1;
   obj.numToCharCode();
-  assert(JSON.stringify(obj.state) === '{"num":-1,"charCode":255}', 'Test 3');
+  assert(JSON.stringify(obj.state) === '{"num":-1,"charCode":255}', "Test 3");
 
   obj.state.num = -2;
   obj.numToCharCode();
-  assert(JSON.stringify(obj.state) === '{"num":-2,"charCode":254}', 'Test 4');
+  assert(JSON.stringify(obj.state) === '{"num":-1,"charCode":254}', "Test 4");
 
   obj.state.num = 140;
   obj.numToCharCode();
-  assert(JSON.stringify(obj.state) === '{"num":140,"charCode":140}', 'Test 5');
+  assert(JSON.stringify(obj.state) === '{"num":140,"charCode":140}', "Test 5");
 
   obj.state.num = 0;
   obj.state.charCode = 0;
-  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', 'Test 6');
+  assert(JSON.stringify(obj.state) === '{"num":0,"charCode":0}', "Test 6");
 
   console.groupEnd();
 } catch (err) {
